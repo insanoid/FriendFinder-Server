@@ -71,7 +71,7 @@ exports.create = function (req, res) {
 					}else{
 						res.statusCode = 500;
 						return res.json({
-							error:"An error occured while handling your request."
+							error:error+"An error occured while handling your request."
 						});
 					}
 				});
