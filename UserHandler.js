@@ -8,7 +8,7 @@ UsersCollection = function(host, port) {
 	this.db= new Db('friendfinder', new Server(host, port, {auto_reconnect: true}, {}),{safe:true});
 	this.db.open(function(err,data){
      if(data){
-        data.authenticate(username, password,function(err2,data2){
+        data.authenticate("root", "bitnami",function(err2,data2){
              if(data2){
                  console.log("Database opened");
              }
