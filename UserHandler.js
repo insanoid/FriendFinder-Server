@@ -6,9 +6,14 @@ var ObjectID = require('mongodb').ObjectID;
 
 UsersCollection = function(host, port) {
 	this.db= new Db('friendfinder', new Server(host, port, {auto_reconnect: true}, {}),{safe:true});
-	this.db.open(function(err,data){
+	this.db.open(function(){});
+};
+
+UsersCollectionConnectorDuplicate = function(host, port) {
+        this.db= new Db('friendfinder', new Server(host, port, {auto_reconnect: true}, {}),{safe:true});
+        this.db.open(function(err,data){
      if(data){
-        data.authenticate("root", "bitnami",function(err2,data2){
+        data.authenticate("karthikeyaudupa", "1123581321",function(err2,data2){
              if(data2){
                  console.log("Database opened");
              }
@@ -46,6 +51,7 @@ UsersCollection.prototype.authenticateUser = function(_username,_password, callb
 	this.getCollection(function(error, usercollection) {
 		if( error ) callback(error)
 		else {
+			console.log(_username+"-"+_password);
 			usercollection.findOne({username: _username,password: _password}, function(error, result) {
 				if( error ) callback(error)
 				else callback(null, result)

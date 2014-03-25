@@ -3,8 +3,14 @@ var UsersCollection = require('../UserHandler').UsersCollection;
 var usersCollection = new UsersCollection('localhost', 27017);
 var validator = require('validator');
 	
+/*
+db.places.ensureIndex( { "device_info.location": "2d" } )
+db.findfriends.ensureIndex( { "device_info.location": "2d" } )
+
+db.findfriends.find( { 'location': {$near : [ 20.6, 70.45] } } ).limit(3)
+*/
 exports.authenticate = function (req, res) {
-    
+	 
 	if (!(validator.isEmail(req.param('username'))) || !req.param('password') || !req.param('uuid')) {
 		res.statusCode = 400;
 		return res.json({
@@ -12,17 +18,22 @@ exports.authenticate = function (req, res) {
 		});
         
 	}else{
-		usersCollection.authenticateUser(req.param('username'),req.param('password'), function(error_m,user){
+		
+		var crypto = require('crypto'), shasum = crypto.createHash('sha1');
+		shasum.update(req.param('password'));
+		
+		usersCollection.authenticateUser(req.param('username'),shasum.digest('hex'), function(error_m,user){
 
 			if(user){
 				
+					
 				var resp = generateAuthenticateToken(user,req.param('uuid'));
 				var edit_user = resp[0];
 				var user_id = edit_user._id;
 				delete edit_user['_id'];
 				usersCollection.updateUserObject(user_id,edit_user, function(error,result){
-					
 					if(!error){
+						req.session.authkey = resp[1];
 						return res.json({
 							auth_token:resp[1]
 						});
@@ -47,6 +58,8 @@ exports.authenticate = function (req, res) {
     
 exports.create = function (req, res) {
     
+	
+	
 	if (!(validator.isEmail(req.param('username'))) || !req.param('password') || !req.param('uuid')) {
 		res.statusCode = 400;
 		return res.json({
@@ -54,6 +67,7 @@ exports.create = function (req, res) {
 		});
         
 	}else{
+		
 		usersCollection.getUserForEmail(req.param('username'), function(error,user){
 			if(user){
 				res.statusCode = 400;
@@ -61,7 +75,10 @@ exports.create = function (req, res) {
 					error: 'Email already exists, try logging in!'
 				});
 			}else{
-				var user = createUser(req.param('username'),req.param('password'),req.param('uuid'));
+				var crypto = require('crypto'), shasum = crypto.createHash('sha1');
+				shasum.update(req.param('password'));
+				
+				var user = createUser(req.param('username'),shasum.digest('hex'),req.param('uuid'));
 				var auth_key = user.device_info[0].auth_token;
 				usersCollection.addNewUser(user, function(error,result){
 					if(!error){

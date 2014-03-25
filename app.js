@@ -19,9 +19,13 @@ app.set('view engine', 'jade');
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.json());
+
 app.use(express.urlencoded());
 app.use(express.methodOverride());
+app.use(express.cookieParser('somegoddamsecretthisis'));
+app.use(express.cookieSession());
 app.use(app.router);
+
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -38,10 +42,53 @@ app.get('/friends/all',user.all);
 app.get('/friends/location/all',user.all_location);
 app.get('/friends/location',user.friend_location);
 
+
+app.post('/rq',user.authenticate);
+
 app.get('/', function(request, response) {
-  response.render("index");
+	  
+	var auth_key = request.session.authkey;
+	if(auth_key === undefined){
+		response.render("index");
+	}else{
+		response.render("mapview");
+	}
+	
 });
 
-http.createServer(app).listen(app.get('port'), function(){
-	console.log('Express server listening on port ' + app.get('port'));
+app.get('/map', function(request, response) {
+
+	var auth_key = request.session.authkey;
+	if(auth_key === undefined){
+		response.redirect('/');
+	}else{
+		response.render("mapview");
+	}
+
 });
+
+app.get('/logout', function(request, response) {
+
+		request.session = null;
+		response.redirect('/');
+
+});
+
+app.get('/getFriends', function(request, response) {
+
+	var auth_key = request.session.authkey;
+	if(auth_key === undefined){
+		response.redirect('/al');
+	}else{
+		request.query.auth_token = auth_key;
+		user.all_location(request, response);
+	}
+
+});
+
+var server = http.createServer(app).listen(app.get('port'), function(){
+	console.log('Express server listening on port: ' + app.get('port'));
+});
+
+
+
