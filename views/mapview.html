@@ -73,6 +73,7 @@ var fetchPlaces = function() {
 				console.log(response.friends);
 				friends = response.friends;
 				for (f in friends) {
+					console.log(friends[f]+"-",f);
 					if(friends[f].location){
 						tmpLatLng = new google.maps.LatLng( friends[f].location[0], friends[f].location[1]);
 						var date = new Date(friends[f].last_updated);
@@ -82,13 +83,12 @@ var fetchPlaces = function() {
 							position: tmpLatLng,
 							title : friends[f].username + "<br>" + timeSince(date) +" ago."
 						});
+						
 					    var newOption = $("<li><a href=\"#\">"+friends[f].username+"</a></li>")
 					       $("#friendslist").append(newOption);
 						bindInfoWindow(marker, map, infowindow,  friends[f].username + "<br>" +  timeSince(date) +" ago.");
- 						markers.push(marker);
 					}
-					
-				   
+				  
 				}
 		}
 	})

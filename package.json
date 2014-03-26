@@ -12,6 +12,7 @@
     "mongodb": "*",
     "hat": "0.0.3",
     "validator": "~3.5.0",
-	"socket.io": "latest"
+	"socket.io": "latest",
+	"node-gcm": "~0.9.6"
   }
 }
