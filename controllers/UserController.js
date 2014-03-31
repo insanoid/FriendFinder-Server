@@ -91,7 +91,7 @@ console.log((validator.isEmail(req.param('username'))) +" "+ req.param('password
 
 //Update the user's information (auth token, device push token)
 exports.update = function (req, res) {
-
+console.log(req.param('device_push_token')+" - "+ req.param('auth_token'));
     if (!req.param('auth_token') || !req.param('device_push_token')) {
 
         res.statusCode = 400;
@@ -142,6 +142,8 @@ exports.update = function (req, res) {
 
 //Update user's location.
 exports.location_update = function (req, res) {
+	console.log(req.param('latitude')+" - "+req.param('longitude')+" - "+ req.param('auth_token'));
+	
     if (!(90 > parseFloat(req.param('longitude')) && parseFloat(req.param('longitude')) > -90) ||
 	 !(180 > parseFloat(req.param('latitude')) && parseFloat(req.param('latitude')) > -180) ||
 	  !req.param('auth_token')) {
@@ -328,7 +330,7 @@ function encryptPassword(password){
 }
 
 function getUsersLocationInfo(location_needed, required_user_id, req, res) {
-
+	console.log(" - "+ req.param('auth_token'));
     if (!req.param('auth_token')) {
         res.statusCode = 400;
         return res.json({
