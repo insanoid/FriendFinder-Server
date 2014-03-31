@@ -84,15 +84,23 @@ app.get('/serverlog', function (request, response) {
         response.redirect('/');
     } else {
 		fs = require('fs')
-		fs.readFile('~/.forever/friendfinder.log', 'utf8', function (err,data) {
+		fs.readFile( getUserHome()+'/.forever/friendfinder.log', 'utf8', function (err,data) {
 		  if (err) {
-				response.redirect('/');
-		  }
-			  res.send(data);
+			console.log(err);
+			response.redirect('/');
+		  }else{
+		   response.writeHead(404, {"Content-Type": "text/plain"});
+		   response.write(data);
+		   response.end();
+		}
 		});
     }
 
 });
+
+function getUserHome() {
+  return process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
+}
 
 
 var server = http.createServer(app).listen(app.get('port'), function () {
