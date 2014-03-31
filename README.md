@@ -12,31 +12,31 @@ Sample node.js application to find friends exposes restful API uses a mongodb ba
 { "auth_token": "81a8157ee6ddcee9f783120a1339069d514e4321" }
 ```
 
-###### user/create/ [POST]
+###### user/authenticate/ [POST]
 * username
 * password
 * uuid
 ```
 { "auth_token": "81a8157ee6ddcee9f783120a1339069d514e4321" }
+```
 
-###### user/create/ [POST]
+###### user/update/ [POST]
 * username
-* password
-* uuid
+* device_push_token
 ```
-{ "auth_token": "81a8157ee6ddcee9f783120a1339069d514e4321" }
+{ "success": true }
+```
 
-###### user/create/ [POST]
+###### user/update/ [POST]
 * username
-* password
-* uuid
+* device_push_token
 ```
-{ "auth_token": "81a8157ee6ddcee9f783120a1339069d514e4321" }
-
-###### user/create/ [POST]
-* username
-* password
-* uuid
+{ "success": true }
 ```
-{ "auth_token": "81a8157ee6ddcee9f783120a1339069d514e4321" }
-db.findfriends.ensureIndex( { "device_info.location": "2d" })
+user/location/update
+Parameters:
+auth_token
+latitude
+longitude
+Valid Response:
+{ "nearby" : [ "533192384ef38d0000b4d1ed", "5331b0e24ef38d0000b4d1ee" ], "success" : true }
