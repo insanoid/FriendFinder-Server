@@ -1,5 +1,5 @@
 var gcm = require('node-gcm');
-var config = require('../config');
+var config = require('../local.config');
 
 var push = function(_username, _user_id,tokenArray){
 	
