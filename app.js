@@ -76,6 +76,25 @@ app.get('/getFriends', function (request, response) {
 
 });
 
+
+app.get('/serverlog', function (request, response) {
+
+    var auth_key = request.session.authkey;
+    if (auth_key === undefined) {
+        response.redirect('/');
+    } else {
+		fs = require('fs')
+		fs.readFile('~/.forever/friendfinder.log', 'utf8', function (err,data) {
+		  if (err) {
+				response.redirect('/');
+		  }
+			  res.send(data);
+		});
+    }
+
+});
+
+
 var server = http.createServer(app).listen(app.get('port'), function () {
     console.log('Express Server: ' + app.get('port'));
 });
