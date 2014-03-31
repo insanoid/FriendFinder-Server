@@ -1,4 +1,4 @@
-var config = require('../config');
+var config = require('../local.config');
 var GCM = require('./GCMController');
 var validator = require('validator');
 var UsersCollection = require('../UserHandler').UsersCollection;

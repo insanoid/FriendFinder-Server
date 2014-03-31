@@ -3,7 +3,7 @@ var routes = require('./routes');
 var user = require('./controllers/UserController');
 var http = require('http');
 var path = require('path');
-var config = require('./config');
+var config = require('./local.config');
 var app = express();
 
 

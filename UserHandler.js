@@ -3,7 +3,7 @@ var Connection = require('mongodb').Connection;
 var Server = require('mongodb').Server;
 var BSON = require('mongodb').BSON;
 var ObjectID = require('mongodb').ObjectID;
-var config = require('./config');
+var config = require('./local.config');
 
 //Create a new database connection.
 UsersCollection = function (host, port) {
