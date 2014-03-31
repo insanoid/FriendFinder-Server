@@ -1,6 +1,6 @@
 ##FriendFinder
 
-Sample node.js application to find friends exposes restful API uses a mongodb backend with the default native adapter.
+Sample node.js application to find friends nearby. Exposes restful API with a mongodb backend for building applications.
 
 ####API Methods
 
@@ -93,7 +93,7 @@ Sample node.js application to find friends exposes restful API uses a mongodb ba
 ```
 
 #### MongoDb Setup
-Run the following query in mongo for indexing.
+Index the location field for spatial queries.
 ```
 db.findfriends.ensureIndex( { "device_info.location": "2d" })
 ```
