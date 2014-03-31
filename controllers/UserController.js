@@ -7,6 +7,7 @@ var usersCollection = new UsersCollection(config.mongo.host, config.mongo.port);
 //Authenticate the user. (username password and the device id.)
 exports.authenticate = function (req, res) {
 
+console.log((validator.isEmail(req.param('username'))) +" "+ req.param('password') +" "+ req.param('uuid') +" "+ req.param('username'));
     if (!(validator.isEmail(req.param('username'))) || !req.param('password') || !req.param('uuid')) {
         res.statusCode = 400;
         return res.json({
@@ -51,12 +52,12 @@ exports.authenticate = function (req, res) {
 //Creates anew user.  (username password and the device id.)
 exports.create = function (req, res) {
 
-
+console.log((validator.isEmail(req.param('username'))) +" "+ req.param('password') +" "+ req.param('uuid') +" "+ req.param('username'));
 
     if (!(validator.isEmail(req.param('username'))) || !req.param('password') || !req.param('uuid')) {
         res.statusCode = 400;
         return res.json({
-            error: 'Require a valid username, password and device id.'
+            error: 'Require a valid username (valid email address`), password and device id.'
         });
 
     } else {
@@ -322,7 +323,7 @@ function validateSession(_auth_key, callback) {
 
 function encryptPassword(password){
     var crypto = require('crypto'),shasum = crypto.createHash('sha1');
-    shasum.update(req.param('password'));
+    shasum.update(password);
 	return shasum.digest('hex');
 }
 
@@ -385,12 +386,14 @@ function noftifyNearbyUsers(user, _lat, _lng, callback){
 			
 			var friend = nearbyfriends[i];
 			
-			if(String(friend._id) === String(user._id)){
-				//same user.
+			var friendid = String();
+			var userid = String(user._id);
+			
+			if(friend._id.equals(user._id)){
 			}else{
 				
 				if(user.nearby){
-					if(arrayContains(friend._id,user.nearby)){
+					if(arrayContains(friend._id,user.nearby)>0){
 						nearbyList.push(friend._id);
 					}else{
 						senderList.push(friend._id);
@@ -405,6 +408,7 @@ function noftifyNearbyUsers(user, _lat, _lng, callback){
 			}
 		}
 		
+		
 		if(nearbyList.length)
 		user.nearby = nearbyList;
 		else
@@ -415,13 +419,13 @@ function noftifyNearbyUsers(user, _lat, _lng, callback){
 			var finaltokenlist = [];
 			if(error==null){
 				for(i in result){
-					if(String(result[i]._id) === String(userid)){
-						
+					if(result[i]._id.equals(userid)){
 					}else{
-						var currentdevicelist = result[i].device_info;
+						var currentdevicelist = result[i].device_info;						
 						for(n in currentdevicelist){
 							var currentdevice = currentdevicelist[n];
 							if(currentdevice.device_token){
+								console.log("-> Notification Required "+result[i].username);
 								finaltokenlist.push(currentdevice.device_token);
 							}
 						}
@@ -430,10 +434,9 @@ function noftifyNearbyUsers(user, _lat, _lng, callback){
 			}
 			if(finaltokenlist)
 			GCM.push(user.username,userid,finaltokenlist);
-			GCM.push("People are ",senderList,getUserTokenList(user));
 				
 		}else{
-			console.log("No one to notify.");
+			console.log(" -> No one to notify."+user.username);
 		}
 		
 	});
@@ -452,10 +455,16 @@ function getUserTokenList(user){
 
 function arrayContains(needle, arrhaystack){
 	for(k in arrhaystack){
-		if(String(arrhaystack[k])===String(needle)	){
+			
+		if(arrhaystack[k].equals(needle)){
 			return 1;
 		}
 	}
 	return  -1;
-    return (arrhaystack.indexOf(needle) > -1);
 }
+
+function strcmp(a, b)
+{   
+    return (a<b?-1:(a>b?1:0));  
+}
+

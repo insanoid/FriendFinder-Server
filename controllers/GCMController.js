@@ -22,7 +22,8 @@ var push = function(_username, _user_id,tokenArray){
 	}
 	
 	sender.send(message, registrationIds, 4, function (err, result) {
-	    console.log("GCM Result: "+result);
+	    console.log("GCM Result: %j ",result);
+	    console.log("Error Result: "+err);
 	});
 	
 	
