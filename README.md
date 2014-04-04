@@ -27,7 +27,7 @@ Sample node.js application to find friends nearby. Exposes restful API with a mo
 { "success": true }
 ```
 
-###### location/update [POST]
+###### user/location/update [POST]
 * auth_token
 * latitude
 * longitude
